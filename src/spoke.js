@@ -50,9 +50,20 @@ class Spoke {
   //
   $addMethods(mod) {
     if (mod.methods) {
-      for (let [k,v] of Object.entries(mod.methods)) {
-        this[k] = v.bind(this);
-      }
+      // allow recursion on module methods to enable 'namespacing'
+      // of methods through the use of sub-objects
+      let recur = function(obj, parent) {
+        for (let [k,v] of Object.entries(obj)) {
+          // bind function directly
+          if (typeof(v) === 'function') {
+            parent[k] = v.bind(parent);
+          } else if (typeof(v) === 'object') { // recur
+            parent[k] = {};
+            recur(v, parent[k]);
+          }
+        }
+      };
+      recur(mod.methods, this);
     }
   }
   //
