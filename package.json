@@ -3,8 +3,6 @@
   "description": "framework for flexible applications",
   "version": "6.10.0",
   "author": "Mike Smiley <msmiley@alumni.rice.edu>",
-  "url": "https://github.com/msmiley/volante",
-  "repository": "msmiley/volante.git",
   "main": "./src",
   "keywords": [
     "hub",

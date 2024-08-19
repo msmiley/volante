@@ -29,9 +29,9 @@ class Hub extends EventEmitter {
     this.config = {};
     // debug flag
     this.isDebug = false;
-    // testing flag, set from NODE_ENV
+    // convenience testing flag, set from NODE_ENV
     this.isTesting = process.env.NODE_ENV === 'test';
-    // testing flag, set from NODE_ENV
+    // convenience prod flag, set from NODE_ENV
     this.isProduction = process.env.NODE_ENV === 'production';
     // directory to look for modules, resolved in index.js
     this.nodeModulesPath = module.parent.exports.modulePath;
@@ -44,6 +44,9 @@ class Hub extends EventEmitter {
   // volante_<underscore_path>
   // i.e. if you're using VolanteExpress and want to modify the port,
   // set the following env var: volante_VolanteExpress_port=3000
+  // it is worth noting that env vars are strings, so volante will keep the
+  // value as a string unless it can infer the type from an existing prop, so it's
+  // prudent to use real defaults
   //
   loadConfig(filename) {
     // config file should be relative to module root
@@ -63,7 +66,7 @@ class Hub extends EventEmitter {
             utils.deepSet(config, kp, v);
           }
         }
-        // save full object to hub
+        // save full config object to hub
         this.config = config;
         // look for a top-level name field so we can set the cluster name
         if (this.config.name && typeof(this.config.name) === 'string') {
@@ -74,13 +77,13 @@ class Hub extends EventEmitter {
              this.config.debug === 'true') {
           this.debug();
         }
-        // look for top-level attach flag
+        // look for top-level attach array
         if (this.config.attach && this.config.attach.length) {
           for (let m of this.config.attach) {
             this.attach(m);
           }
         }
-        // look for top-level attachLocal flag
+        // look for top-level attachLocal array
         if (this.config.attachLocal && this.config.attachLocal.length) {
           for (let m of this.config.attachLocal) {
             this.attachLocal(m);
@@ -171,7 +174,7 @@ class Hub extends EventEmitter {
         // instantiate a Spoke using this module definition
         var newSpoke = new Spoke(this, mod);
         // set version from provided npm (if applicable)
-        newSpoke.version = version ? version:'none';
+        newSpoke.version = version ? version : 'none';
         this.spokes[mod.name] = newSpoke;
         if (version) {
           this.log(this.name, `attached ${mod.name} v${version}`);
