@@ -408,6 +408,13 @@ class Hub extends EventEmitter {
     }
     return ret;
   }
+  
+  setStatus(status, args = []) {
+    for (let s of Object.values(this.spokes)) {
+      s.$setStatus(status, args);  
+    }
+  }
+
   //
   // get the volante wheel uptime
   //

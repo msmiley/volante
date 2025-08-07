@@ -1,7 +1,7 @@
 {
   "name": "volante",
   "description": "framework for flexible applications",
-  "version": "6.10.1",
+  "version": "6.11.0",
   "author": "Mike Smiley <msmiley@alumni.rice.edu>",
   "main": "./src",
   "keywords": [
